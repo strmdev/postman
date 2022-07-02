@@ -1,0 +1,2475 @@
+{
+	"info": {
+		"_postman_id": "d33021f5-2b7f-4068-a19d-44bd5ffbc970",
+		"name": "SpaceX Open Source REST API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Company",
+			"item": [
+				{
+					"name": "Get all company info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Check company name and founder\", () => {",
+									"    pm.expect(response.name).to.eql(\"SpaceX\");",
+									"    pm.expect(response.founder).to.eql(\"Elon Musk\");",
+									"});",
+									"",
+									"pm.test(\"Check headquarters data\", () => {",
+									"    pm.expect(response.headquarters.address).to.eql(\"Rocket Road\");",
+									"    pm.expect(response.headquarters.city).to.eql(\"Hawthorne\");",
+									"    pm.expect(response.headquarters.state).to.eql(\"California\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/company",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Capsules",
+			"item": [
+				{
+					"name": "Get all capsules",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const CAPSULE_ID = \"5e9e2c5bf3591880643b2669\";",
+									"",
+									"pm.test(`Check ${CAPSULE_ID} capsule is exists`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    let is_capsule_exists = false;",
+									"    let capsule_index     = -1;",
+									"    ",
+									"    for (let index = 0; index < response.length; index++) {",
+									"        if (response[index].id === CAPSULE_ID) {",
+									"            is_capsule_exists = true;",
+									"            capsule_index     = index;",
+									"            break;",
+									"        }",
+									"    }",
+									"",
+									"    pm.expect(is_capsule_exists).be.true;",
+									"    pm.expect(capsule_index).to.gte(0);",
+									"    pm.expect(response[capsule_index].id).to.eql(CAPSULE_ID);",
+									"",
+									"    pm.collectionVariables.set(\"capsuleID\", CAPSULE_ID);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/capsules",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"capsules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one capsule",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"let capsuleIDValue = pm.collectionVariables.get(\"capsuleID\");",
+									"",
+									"pm.test(`Check ${capsuleIDValue} capsule data`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    pm.expect(response.id).to.eql(capsuleIDValue);",
+									"    pm.expect(response.reuse_count).to.eql(2);",
+									"    pm.expect(response.water_landings).to.eql(3);",
+									"    pm.expect(response.land_landings).to.eql(0);",
+									"",
+									"    let expect_launches = [\"5eb87ce7ffd86e000604b33b\", \"5eb87d03ffd86e000604b352\", \"5eb87d39ffd86e000604b37e\"];",
+									"    for (let index = 0; index < expect_launches.length; index++) {",
+									"        pm.expect(response.launches[index]).to.eql(expect_launches[index]);    ",
+									"    }",
+									"",
+									"    pm.expect(response.serial).to.eql(\"C106\");",
+									"    pm.expect(response.status).to.eql(\"active\");",
+									"    pm.expect(response.type).to.eql(\"Dragon 1.1\");",
+									"",
+									"    pm.collectionVariables.set(\"capsuleID\", \"undefined\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/capsules/{{capsuleID}}",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"capsules",
+								"{{capsuleID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query capsules",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"// \"query\": { \"status\": { \"$eq\": \"retired\"}, \"water_landings\": { \"$eq\": 1}}",
+									"pm.test(\"Query capsules\", () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    let capsule_count = 0;",
+									"    for(let index = 0; index < response.docs.length; index++) {",
+									"        if (response.docs[index].status === \"retired\" && response.docs[index].water_landings === 1) {",
+									"            capsule_count++;",
+									"        }    ",
+									"    }",
+									"",
+									"    pm.expect(capsule_count).to.eq(response.totalDocs);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": { \"status\": { \"$eq\": \"retired\"}, \"water_landings\": { \"$eq\": 1}},\n  \"options\": {}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/capsules/query",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"capsules",
+								"query"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cores",
+			"item": [
+				{
+					"name": "Get all cores",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const CORE_ID = \"627843db57b51b752c5c5a54\";",
+									"",
+									"pm.test(`Check ${CORE_ID} core is exists`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    let is_core_exists = false;",
+									"    let core_index     = -1;",
+									"    ",
+									"    for (let index = 0; index < response.length; index++) {",
+									"        if (response[index].id === CORE_ID) {",
+									"            is_core_exists = true;",
+									"            core_index     = index;",
+									"            break;",
+									"        }",
+									"    }",
+									"",
+									"    pm.expect(is_core_exists).be.true;",
+									"    pm.expect(core_index).to.gte(0);",
+									"    pm.expect(response[core_index].id).to.eql(CORE_ID);",
+									"",
+									"    pm.collectionVariables.set(\"coreID\", CORE_ID);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/cores",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"cores"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one core",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const CORE_ID = pm.collectionVariables.get(\"coreID\");",
+									"",
+									"pm.test(`Check ${CORE_ID} core data`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    pm.expect(response.id).to.eql(CORE_ID);",
+									"    pm.expect(response.block).to.eql(5);",
+									"    pm.expect(response.reuse_count).to.eql(1);",
+									"    pm.expect(response.rtls_attempts).to.eql(0);",
+									"    pm.expect(response.rtls_landings).to.eql(0);",
+									"    pm.expect(response.asds_attempts).to.eql(2);",
+									"    pm.expect(response.asds_landings).to.eql(2);",
+									"",
+									"    let launches = [\"625828f25988f159024b9643\", \"6243aea5af52800c6e91925c\"];",
+									"    for (let index = 0; index < launches.length; index++) {",
+									"        pm.expect(response.launches[index]).to.eql(launches[index]);    ",
+									"    }",
+									"",
+									"    pm.expect(response.serial).to.eql(\"B1073\");",
+									"    pm.expect(response.status).to.eql(\"active\");",
+									"",
+									"    pm.collectionVariables.set(\"coreID\", \"undefined\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/cores/{{coreID}}",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"cores",
+								"{{coreID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query  cores",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"// \"query\": { \"block\": 5, \"reuse_count\": { \"$gte\": 5 }, \"status\": \"active\" }",
+									"pm.test(\"Query cores\", () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    let cores_count = 0;",
+									"    for(let index = 0; index < response.docs.length; index++) {",
+									"        if (response.docs[index].block === 5 && ",
+									"            response.docs[index].reuse_count >= 5 &&",
+									"            response.docs[index].status === \"active\") {",
+									"            ",
+									"            cores_count++;",
+									"        }    ",
+									"    }",
+									"",
+									"    pm.expect(cores_count).to.eq(response.totalDocs);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\": { \"block\": 5, \"reuse_count\": { \"$gte\": 5 }, \"status\": \"active\" },\n    \"options\": {}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/cores/query",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"cores",
+								"query"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Crew",
+			"item": [
+				{
+					"name": "Get all crew",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const CREW_ID = \"5ebf1a6e23a9a60006e03a7a\";",
+									"",
+									"pm.test(`Check ${CREW_ID} crew is exists`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    let is_crew_exists = false;",
+									"    let crew_index     = -1;",
+									"    ",
+									"    for (let index = 0; index < response.length; index++) {",
+									"        if (response[index].id === CREW_ID) {",
+									"            is_crew_exists = true;",
+									"            crew_index = index;",
+									"            break;",
+									"        }",
+									"    }",
+									"",
+									"    pm.expect(is_crew_exists).be.true;",
+									"    pm.expect(crew_index).to.gte(0);",
+									"    pm.expect(response[crew_index].id).to.eql(CREW_ID);",
+									"",
+									"    pm.collectionVariables.set(\"crewID\", CREW_ID);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/crew",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"crew"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one crew member",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const CREW_ID = pm.collectionVariables.get(\"crewID\");",
+									"",
+									"pm.test(`Check ${CREW_ID} crew data`, () => {",
+									"    const response     = pm.response.json();",
+									"    const LAUNCH_VALUE = \"5eb87d46ffd86e000604b388\";",
+									"",
+									"    pm.expect(response.id).to.eql(CREW_ID);",
+									"    pm.expect(response.name).to.eql(\"Robert Behnken\");",
+									"    pm.expect(response.agency).to.eql(\"NASA\");",
+									"    pm.expect(response.image).to.eql(\"https://imgur.com/0smMgMH.png\");",
+									"    pm.expect(response.wikipedia).to.eql(\"https://en.wikipedia.org/wiki/Robert_L._Behnken\");",
+									"    ",
+									"    let launch_index = -1;",
+									"    let is_launch_value_exists = false;",
+									"    for (let index = 0; index < response.launches.length; index++) {",
+									"        if (response.launches[index] === LAUNCH_VALUE) {",
+									"            is_launch_value_exists = true;",
+									"            launch_index = index;",
+									"            break;",
+									"        }",
+									"    }",
+									"",
+									"    pm.expect(is_launch_value_exists).be.true;",
+									"    pm.expect(launch_index).to.gte(0);",
+									"    pm.expect(response.launches[launch_index]).to.eql(LAUNCH_VALUE);",
+									"    pm.expect(response.status).to.eql(\"active\");",
+									"",
+									"    pm.collectionVariables.set(\"crewID\", \"undefined\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/crew/{{crewID}}",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"crew",
+								"{{crewID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query crew members",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"/* \"query\": { ",
+									"                \"agency\": { \"$in\": [\"JAXA\", \"ESA\"] },",
+									"                \"launches\": { \"$in\": [\"5eb87d4dffd86e000604b38e\", \"5fe3af58b3467846b324215f\"] }",
+									"            } */",
+									"pm.test(\"Query crew members\", () => {",
+									"    const response         = pm.response.json();",
+									"    let crew_members_count = 0;",
+									"",
+									"    for(let docs_index = 0; docs_index < response.docs.length; docs_index++) {",
+									"        let docs = response.docs[docs_index];",
+									"        if (docs.agency === \"JAXA\" || docs.agency === \"ESA\") {",
+									"            for(let launch_index = 0; launch_index < docs.launches.length; launch_index++) {",
+									"                if(docs.launches[launch_index] === \"5eb87d4dffd86e000604b38e\" ||",
+									"                   docs.launches[launch_index] === \"5fe3af58b3467846b324215f\") {",
+									"                    ",
+									"                    crew_members_count++;",
+									"                }",
+									"            }",
+									"        }   ",
+									"    }",
+									"",
+									"    pm.expect(crew_members_count).to.eq(response.totalDocs);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": { \n               \"agency\": { \"$in\": [\"JAXA\", \"ESA\"] },\n               \"launches\": { \"$in\": [\"5eb87d4dffd86e000604b38e\", \"5fe3af58b3467846b324215f\"] }\n            },\n  \"options\": {\"select\": [\"name\", \"agency\", \"launches\"]}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/crew/query",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"crew",
+								"query"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dragons",
+			"item": [
+				{
+					"name": "Get all Dragons",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const DRAGON_ID = \"5e9d058759b1ff74a7ad5f8f\";",
+									"",
+									"pm.test(`Check ${DRAGON_ID} dragon is exists`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    let is_dragon_exists = false;",
+									"    let dragon_index     = -1;",
+									"    ",
+									"    for (let index = 0; index < response.length; index++) {",
+									"        if (response[index].id === DRAGON_ID) {",
+									"            is_dragon_exists = true;",
+									"            dragon_index = index;",
+									"            break;",
+									"        }",
+									"    }",
+									"",
+									"    pm.expect(is_dragon_exists).be.true;",
+									"    pm.expect(dragon_index).to.gte(0);",
+									"    pm.expect(response[dragon_index].id).to.eql(DRAGON_ID);",
+									"",
+									"    pm.collectionVariables.set(\"dragonID\", DRAGON_ID);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/dragons",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"dragons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one Dragon",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const DRAGON_ID = pm.collectionVariables.get(\"dragonID\");",
+									"",
+									"pm.test(`Check ${DRAGON_ID} dragon data`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    pm.expect(response.id).to.eql(DRAGON_ID);",
+									"    pm.expect(response.name).to.eql(\"Dragon 1\");",
+									"    pm.expect(response.type).to.eql(\"capsule\");",
+									"    pm.expect(response.heat_shield.dev_partner).to.eql(\"NASA\");",
+									"    pm.expect(response.active).to.true;",
+									"    pm.expect(response.wikipedia).to.eql(\"https://en.wikipedia.org/wiki/SpaceX_Dragon\");",
+									"    pm.expect(response.dry_mass_kg).to.eql(4200);",
+									"    pm.expect(response.return_payload_mass.kg).to.eql(3000);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/dragons/{{dragonID}}",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"dragons",
+								"{{dragonID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Dragons",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"// \"query\": { \"_id\": \"{{dragonID}}\" }",
+									"pm.test(\"Query dragons\", () => {",
+									"    const response = pm.response.json();",
+									"    let dragon     = response.docs[0];",
+									"",
+									"    pm.expect(response.totalDocs).to.eql(1);",
+									"    pm.expect(dragon.id).to.eql(pm.collectionVariables.get(\"dragonID\"));",
+									"    pm.expect(dragon.name).to.eql(\"Dragon 1\");",
+									"    pm.expect(dragon.first_flight).to.eql(\"2010-12-08\");",
+									"",
+									"    pm.collectionVariables.set(\"dragonID\", \"undefined\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": { \"_id\": \"{{dragonID}}\" },\n  \"options\": {}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/dragons/query",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"dragons",
+								"query"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "History",
+			"item": [
+				{
+					"name": "Get all history events",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const HISTORY_ID = \"5f6fb2cfdcfdf403df37971e\";",
+									"",
+									"pm.test(`Check ${HISTORY_ID} history is exists`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    let is_history_exists = false;",
+									"    let history_index     = -1;",
+									"    ",
+									"    for (let index = 0; index < response.length; index++) {",
+									"        if (response[index].id === HISTORY_ID) {",
+									"            is_history_exists = true;",
+									"            history_index     = index;",
+									"            break;",
+									"        }",
+									"    }",
+									"",
+									"    pm.expect(is_history_exists).be.true;",
+									"    pm.expect(history_index).to.gte(0);",
+									"    pm.expect(response[history_index].id).to.eql(HISTORY_ID);",
+									"",
+									"    pm.collectionVariables.set(\"historyID\", HISTORY_ID);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/history",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"history"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one history event",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const HISTORY_ID = pm.collectionVariables.get(\"historyID\");",
+									"",
+									"pm.test(`Check ${HISTORY_ID} history data`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    pm.expect(response.id).to.eql(HISTORY_ID);",
+									"    pm.expect(response.event_date_unix).to.eql(1222643700);",
+									"    pm.expect(response.event_date_utc).to.eql(\"2008-09-28T23:15:00Z\");",
+									"    pm.expect(response.title).to.eql(\"Falcon reaches Earth orbit\");",
+									"    pm.expect(response.links.article).to.eql(\"http://www.spacex.com/news/2013/02/11/flight-4-launch-update-0\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/history/{{historyID}}",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"history",
+								"{{historyID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query history events",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"// \"query\": { \"_id\": \"{{historyID}}\" }",
+									"pm.test(\"Query history events\", () => {",
+									"    const response = pm.response.json();",
+									"    let history    = response.docs[0];",
+									"",
+									"    pm.expect(response.totalDocs).to.eql(1);",
+									"    pm.expect(history.id).to.eql(pm.collectionVariables.get(\"historyID\"));",
+									"    pm.expect(history.title).to.eql(\"Falcon reaches Earth orbit\");",
+									"    pm.expect(history.links.article).to.eql(\"http://www.spacex.com/news/2013/02/11/flight-4-launch-update-0\");",
+									"",
+									"    pm.collectionVariables.set(\"historyID\", \"undefined\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": { \"_id\": \"{{historyID}}\" },\n  \"options\": {}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/history/query",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"history",
+								"query"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Landpads",
+			"item": [
+				{
+					"name": "Get all landing pads",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const LANDING_PAD_ID = \"5e9e3032383ecb267a34e7c7\";",
+									"",
+									"pm.test(`Check ${LANDING_PAD_ID} landing pad is exists`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    let is_landing_pad_exists = false;",
+									"    let landing_pad_index     = -1;",
+									"    ",
+									"    for (let index = 0; index < response.length; index++) {",
+									"        if (response[index].id === LANDING_PAD_ID) {",
+									"            is_landing_pad_exists = true;",
+									"            landing_pad_index     = index;",
+									"            break;",
+									"        }",
+									"    }",
+									"",
+									"    pm.expect(is_landing_pad_exists).be.true;",
+									"    pm.expect(landing_pad_index).to.gte(0);",
+									"    pm.expect(response[landing_pad_index].id).to.eql(LANDING_PAD_ID);",
+									"",
+									"    pm.collectionVariables.set(\"landingPadID\", LANDING_PAD_ID);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/landpads",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"landpads"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one landing pad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const LANDING_PAD_ID = pm.collectionVariables.get(\"landingPadID\");",
+									"",
+									"pm.test(`Check ${LANDING_PAD_ID} landing pad data`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    pm.expect(response.id).to.eql(LANDING_PAD_ID);",
+									"    pm.expect(response.name).to.eql(\"LZ-1\");",
+									"    pm.expect(response.full_name).to.eql(\"Landing Zone 1\");",
+									"    pm.expect(response.status).to.eql(\"active\");",
+									"    pm.expect(response.type).to.eql(\"RTLS\");",
+									"    pm.expect(response.locality).to.eql(\"Cape Canaveral\");",
+									"    pm.expect(response.region).to.eql(\"Florida\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/landpads/{{landingPadID}}",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"landpads",
+								"{{landingPadID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query landing pads",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"// \"query\": { \"_id\": \"{{landingPadID}}\" }",
+									"pm.test(\"Query landing pads\", () => {",
+									"    const response = pm.response.json();",
+									"    let landingPad = response.docs[0];",
+									"",
+									"    pm.expect(response.totalDocs).to.eql(1);",
+									"    pm.expect(landingPad.id).to.eql(pm.collectionVariables.get(\"landingPadID\"));",
+									"    pm.expect(landingPad.name).to.eql(\"LZ-1\");",
+									"    pm.expect(landingPad.full_name).to.eql(\"Landing Zone 1\");",
+									"",
+									"    pm.collectionVariables.set(\"landingPadID\", \"undefined\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": { \"_id\": \"{{landingPadID}}\" },\n  \"options\": {}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/landpads/query",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"landpads",
+								"query"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Launchpads",
+			"item": [
+				{
+					"name": "Get all launchpads",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const LAUNCH_PAD_ID = \"5e9e4501f5090910d4566f83\";",
+									"",
+									"pm.test(`Check ${LAUNCH_PAD_ID} launch pad is exists`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    let is_launch_pad_exists = false;",
+									"    let launch_pad_index     = -1;",
+									"    ",
+									"    for (let index = 0; index < response.length; index++) {",
+									"        if (response[index].id === LAUNCH_PAD_ID) {",
+									"            is_launch_pad_exists = true;",
+									"            launch_pad_index     = index;",
+									"            break;",
+									"        }",
+									"    }",
+									"",
+									"    pm.expect(is_launch_pad_exists).be.true;",
+									"    pm.expect(launch_pad_index).to.gte(0);",
+									"    pm.expect(response[launch_pad_index].id).to.eql(LAUNCH_PAD_ID);",
+									"",
+									"    pm.collectionVariables.set(\"launchPadID\", LAUNCH_PAD_ID);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/launchpads",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"launchpads"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one launchpad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const LAUNCH_PAD_ID = pm.collectionVariables.get(\"launchPadID\");",
+									"",
+									"pm.test(`Check ${LAUNCH_PAD_ID} launch pad data`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    pm.expect(response.id).to.eql(LAUNCH_PAD_ID);",
+									"    pm.expect(response.name).to.eql(\"VAFB SLC 3W\");",
+									"    pm.expect(response.full_name).to.eql(\"Vandenberg Space Force Base Space Launch Complex 3W\");",
+									"    pm.expect(response.status).to.eql(\"retired\");",
+									"    pm.expect(response.locality).to.eql(\"Vandenberg Space Force Base\");",
+									"    pm.expect(response.region).to.eql(\"California\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/launchpads/{{launchPadID}}",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"launchpads",
+								"{{launchPadID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query launchpads",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"// \"query\": { \"_id\": \"{{launchPadID}}\" }",
+									"pm.test(\"Query launchpads\", () => {",
+									"    const response = pm.response.json();",
+									"    let launchPad  = response.docs[0];",
+									"",
+									"    pm.expect(response.totalDocs).to.eql(1);",
+									"    pm.expect(launchPad.id).to.eql(pm.collectionVariables.get(\"launchPadID\"));",
+									"    pm.expect(launchPad.name).to.eql(\"VAFB SLC 3W\");",
+									"    pm.expect(launchPad.status).to.eql(\"retired\");",
+									"",
+									"    pm.collectionVariables.set(\"launchPadID\", \"undefined\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": { \"_id\": \"{{launchPadID}}\" },\n  \"options\": {}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/launchpads/query",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"launchpads",
+								"query"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payloads",
+			"item": [
+				{
+					"name": "Get all payloads",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const PAYLOAD_ID = \"5eb0e4b5b6c3bb0006eeb1e1\";",
+									"",
+									"pm.test(`Check ${PAYLOAD_ID} payload is exists`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    let is_payload_exists = false;",
+									"    let payload_index     = -1;",
+									"    ",
+									"    for (let index = 0; index < response.length; index++) {",
+									"        if (response[index].id === PAYLOAD_ID) {",
+									"            is_payload_exists = true;",
+									"            payload_index     = index;",
+									"            break;",
+									"        }",
+									"    }",
+									"",
+									"    pm.expect(is_payload_exists).be.true;",
+									"    pm.expect(payload_index).to.gte(0);",
+									"    pm.expect(response[payload_index].id).to.eql(PAYLOAD_ID);",
+									"",
+									"    pm.collectionVariables.set(\"payloadID\", PAYLOAD_ID);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/payloads",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"payloads"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one payload",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const PAYLOAD_ID = pm.collectionVariables.get(\"payloadID\");",
+									"",
+									"pm.test(`Check ${PAYLOAD_ID} payload data`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    pm.expect(response.id).to.eql(PAYLOAD_ID);",
+									"    pm.expect(response.name).to.eql(\"FalconSAT-2\");",
+									"    pm.expect(response.type).to.eql(\"Satellite\");",
+									"    pm.expect(response.reused).to.false;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/payloads/{{payloadID}}",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"payloads",
+								"{{payloadID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query payloads",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"// \"query\": { \"_id\": \"{{payloadID}}\" }",
+									"pm.test(\"Query launchpads\", () => {",
+									"    const response = pm.response.json();",
+									"    let payload    = response.docs[0];",
+									"",
+									"    pm.expect(response.totalDocs).to.eql(1);",
+									"    pm.expect(payload.id).to.eql(pm.collectionVariables.get(\"payloadID\"));",
+									"    pm.expect(payload.name).to.eql(\"FalconSAT-2\");",
+									"    pm.expect(payload.type).to.eql(\"Satellite\");",
+									"    pm.expect(payload.reused).to.false;",
+									"",
+									"    pm.collectionVariables.set(\"payloadID\", \"undefined\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": { \"_id\": \"{{payloadID}}\" },\n  \"options\": {}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/payloads/query",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"payloads",
+								"query"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Roadster",
+			"item": [
+				{
+					"name": "Get roadster info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const ROADSTER_ID = \"5eb75f0842fea42237d7f3f4\";",
+									"",
+									"pm.test(`Check ${ROADSTER_ID} roadster is exists`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    pm.expect(response.id).to.eql(ROADSTER_ID);",
+									"    pm.expect(response.name).to.eql(\"Elon Musk's Tesla Roadster\");",
+									"",
+									"    pm.collectionVariables.set(\"roadsterID\", ROADSTER_ID);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/roadster",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"roadster"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query roadster",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"/*",
+									"    \"query\": {},",
+									"    \"options\": {",
+									"        \"select\": [\"name\", \"launch_date_utc\", \"launch_mass_kg\", \"orbit_type\", \"wikipedia\", \"video\"]",
+									"    }",
+									"*/",
+									"pm.test(\"Query roadster\", () => {",
+									"    const response  = pm.response.json();",
+									"",
+									"    pm.expect(response.id).to.eql(pm.collectionVariables.get(\"roadsterID\"));",
+									"    pm.expect(response.name).to.eql(\"Elon Musk's Tesla Roadster\");",
+									"    pm.expect(response.launch_date_utc).to.eql(\"2018-02-06T20:45:00.000Z\");",
+									"    pm.expect(response.launch_mass_kg).to.eql(1350);",
+									"    pm.expect(response.orbit_type).to.eql(\"heliocentric\");",
+									"    pm.expect(response.wikipedia).to.eql(\"https://en.wikipedia.org/wiki/Elon_Musk%27s_Tesla_Roadster\");",
+									"    pm.expect(response.video).to.eql(\"https://youtu.be/wbSwFU6tY1c\");",
+									"    ",
+									"    pm.collectionVariables.set(\"roadsterID\", \"undefined\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": {},\n  \"options\": {\n      \"select\": [\"name\", \"launch_date_utc\", \"launch_mass_kg\", \"orbit_type\", \"wikipedia\", \"video\"]\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/roadster/query",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"roadster",
+								"query"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rockets",
+			"item": [
+				{
+					"name": "Get all rockets",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const ROCKET_ID = \"5e9d0d95eda69955f709d1eb\";",
+									"",
+									"pm.test(`Check ${ROCKET_ID} rocket is exists`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    let is_rocket_exists = false;",
+									"    let rocket_index     = -1;",
+									"    ",
+									"    for (let index = 0; index < response.length; index++) {",
+									"        if (response[index].id === ROCKET_ID) {",
+									"            is_rocket_exists = true;",
+									"            rocket_index     = index;",
+									"            break;",
+									"        }",
+									"    }",
+									"",
+									"    pm.expect(is_rocket_exists).be.true;",
+									"    pm.expect(rocket_index).to.gte(0);",
+									"    pm.expect(response[rocket_index].id).to.eql(ROCKET_ID);",
+									"",
+									"    pm.collectionVariables.set(\"rocketID\", ROCKET_ID);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/rockets",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"rockets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one rocket",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const ROCKET_ID = pm.collectionVariables.get(\"rocketID\");",
+									"",
+									"pm.test(`Check ${ROCKET_ID} rocket data`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    pm.expect(response.id).to.eql(ROCKET_ID);",
+									"    pm.expect(response.company).to.eql(\"SpaceX\");",
+									"    pm.expect(response.first_flight).to.eql(\"2006-03-24\");",
+									"    pm.expect(response.type).to.eql(\"rocket\");",
+									"    pm.expect(response.name).to.eql(\"Falcon 1\");",
+									"    pm.expect(response.mass.kg).to.eql(30146);",
+									"    pm.expect(response.height.meters).to.eql(22.25);",
+									"    pm.expect(response.first_stage.reusable).to.false;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/rockets/{{rocketID}}",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"rockets",
+								"{{rocketID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query rockets",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"// \"query\": { \"_id\": \"{{rocketID}}\" }",
+									"pm.test(\"Query rockets\", () => {",
+									"    const response = pm.response.json();",
+									"    let rocket     = response.docs[0];",
+									"",
+									"    pm.expect(response.totalDocs).to.eql(1);",
+									"    pm.expect(rocket.id).to.eql(pm.collectionVariables.get(\"rocketID\"));",
+									"    pm.expect(rocket.company).to.eql(\"SpaceX\");",
+									"    pm.expect(rocket.first_flight).to.eql(\"2006-03-24\");",
+									"    pm.expect(rocket.type).to.eql(\"rocket\");",
+									"    pm.expect(rocket.name).to.eql(\"Falcon 1\");",
+									"    pm.expect(rocket.mass.kg).to.eql(30146);",
+									"    pm.expect(rocket.height.meters).to.eql(22.25);",
+									"    pm.expect(rocket.first_stage.reusable).to.false;",
+									"",
+									"    pm.collectionVariables.set(\"rocketID\", \"undefined\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": { \"_id\": \"{{rocketID}}\" },\n  \"options\": {}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/rockets/query",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"rockets",
+								"query"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ships",
+			"item": [
+				{
+					"name": "Get all ships",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const SHIP_ID = \"5ea6ed2e080df4000697c90a\";",
+									"",
+									"pm.test(`Check ${SHIP_ID} ship is exists`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    let is_ship_exists = false;",
+									"    let ship_index     = -1;",
+									"    ",
+									"    for (let index = 0; index < response.length; index++) {",
+									"        if (response[index].id === SHIP_ID) {",
+									"            is_ship_exists = true;",
+									"            ship_index     = index;",
+									"            break;",
+									"        }",
+									"    }",
+									"",
+									"    pm.expect(is_ship_exists).be.true;",
+									"    pm.expect(ship_index).to.gte(0);",
+									"    pm.expect(response[ship_index].id).to.eql(SHIP_ID);",
+									"",
+									"    pm.collectionVariables.set(\"shipID\", SHIP_ID);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/ships",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"ships"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one ship",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const SHIP_ID = pm.collectionVariables.get(\"shipID\");",
+									"",
+									"pm.test(`Check ${SHIP_ID} ship data`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    pm.expect(response.id).to.eql(SHIP_ID);",
+									"    pm.expect(response.name).to.eql(\"GO Pursuit\");",
+									"    pm.expect(response.active).to.false;",
+									"    pm.expect(response.home_port).to.eql(\"Port Canaveral\");",
+									"    pm.expect(response.year_built).to.eql(2007);",
+									"    pm.expect(response.mass_kg).to.eql(502999);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/ships/{{shipID}}",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"ships",
+								"{{shipID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query ships",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"// \"query\": { \"_id\": \"{{shipID}}\" }",
+									"pm.test(\"Query ships\", () => {",
+									"    const response = pm.response.json();",
+									"    let ship       = response.docs[0];",
+									"",
+									"    pm.expect(response.totalDocs).to.eql(1);",
+									"    pm.expect(ship.id).to.eql(pm.collectionVariables.get(\"shipID\"));",
+									"    pm.expect(ship.name).to.eql(\"GO Pursuit\");",
+									"    pm.expect(ship.active).to.false;",
+									"    pm.expect(ship.home_port).to.eql(\"Port Canaveral\");",
+									"    pm.expect(ship.year_built).to.eql(2007);",
+									"    pm.expect(ship.mass_kg).to.eql(502999);",
+									"",
+									"    pm.collectionVariables.set(\"shipID\", \"undefined\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": { \"_id\": \"{{shipID}}\" },\n  \"options\": {}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/ships/query",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"ships",
+								"query"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Starlink",
+			"item": [
+				{
+					"name": "Get all Starlink satellites",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const STARLINK_ID = \"5eed7716096e590006985825\";",
+									"",
+									"pm.test(`Check ${STARLINK_ID} starlink is exists`, () => {",
+									"    const response = pm.response.json();",
+									"",
+									"    let is_starlink_exists = false;",
+									"    let starlink_index     = -1;",
+									"    ",
+									"    for (let index = 0; index < response.length; index++) {",
+									"        if (response[index].id === STARLINK_ID) {",
+									"            is_starlink_exists = true;",
+									"            starlink_index     = index;",
+									"            break;",
+									"        }",
+									"    }",
+									"",
+									"    pm.expect(is_starlink_exists).be.true;",
+									"    pm.expect(starlink_index).to.gte(0);",
+									"    pm.expect(response[starlink_index].id).to.eql(STARLINK_ID);",
+									"",
+									"    pm.collectionVariables.set(\"starlinkID\", STARLINK_ID);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/starlink",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"starlink"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one Starlink satellite",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"const STARLINK_ID = pm.collectionVariables.get(\"starlinkID\");",
+									"",
+									"pm.test(`Check ${STARLINK_ID} starlink data`, () => {",
+									"    const response = pm.response.json();",
+									"    let spaceTrack = response.spaceTrack;",
+									"",
+									"    pm.expect(response.id).to.eql(STARLINK_ID);",
+									"    pm.expect(spaceTrack.OBJECT_NAME).to.eql(\"STARLINK-1506\");",
+									"    pm.expect(spaceTrack.OBJECT_ID).to.eql(\"2020-038T\");",
+									"    pm.expect(spaceTrack.CENTER_NAME).to.eql(\"EARTH\");",
+									"    pm.expect(spaceTrack.OBJECT_TYPE).to.eql(\"PAYLOAD\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/starlink/{{starlinkID}}",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"starlink",
+								"{{starlinkID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Starlink satellites",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code should be OK\", () => {",
+									"    pm.expect(pm.response.status.toUpperCase()).to.eql(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json; charset=utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"});",
+									"",
+									"pm.test(\"Response type is JSON\", () => {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"// \"query\": { \"_id\": \"{{starlinkID}}\" }",
+									"pm.test(\"Query Starlink satellites\", () => {",
+									"    const response = pm.response.json();",
+									"    let starlink   = response.docs[0];",
+									"    let spaceTrack = starlink.spaceTrack;",
+									"",
+									"    pm.expect(response.totalDocs).to.eql(1);",
+									"    pm.expect(starlink.id).to.eql(pm.collectionVariables.get(\"starlinkID\"));",
+									"    pm.expect(spaceTrack.OBJECT_NAME).to.eql(\"STARLINK-1506\");",
+									"    pm.expect(spaceTrack.OBJECT_ID).to.eql(\"2020-038T\");",
+									"    pm.expect(spaceTrack.CENTER_NAME).to.eql(\"EARTH\");",
+									"    pm.expect(spaceTrack.OBJECT_TYPE).to.eql(\"PAYLOAD\");",
+									"",
+									"    pm.collectionVariables.set(\"starlinkID\", \"undefined\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": { \"_id\": \"{{starlinkID}}\" },\n  \"options\": {}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}{{apiVersion}}/starlink/query",
+							"host": [
+								"{{baseURL}}{{apiVersion}}"
+							],
+							"path": [
+								"starlink",
+								"query"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "https://api.spacexdata.com/",
+			"type": "default"
+		},
+		{
+			"key": "apiVersion",
+			"value": "v4",
+			"type": "default"
+		},
+		{
+			"key": "capsuleID",
+			"value": "undefined",
+			"type": "default"
+		},
+		{
+			"key": "coreID",
+			"value": "undefined",
+			"type": "default"
+		},
+		{
+			"key": "crewID",
+			"value": "undefined",
+			"type": "default"
+		},
+		{
+			"key": "dragonID",
+			"value": "undefined",
+			"type": "default"
+		},
+		{
+			"key": "historyID",
+			"value": "undefined",
+			"type": "default"
+		},
+		{
+			"key": "landingPadID",
+			"value": "undefined"
+		},
+		{
+			"key": "launchPadID",
+			"value": "undefined"
+		},
+		{
+			"key": "payloadID",
+			"value": "undefined",
+			"type": "default"
+		},
+		{
+			"key": "roadsterID",
+			"value": "undefined",
+			"type": "default"
+		},
+		{
+			"key": "rocketID",
+			"value": "undefined",
+			"type": "default"
+		},
+		{
+			"key": "shipID",
+			"value": "undefined",
+			"type": "default"
+		},
+		{
+			"key": "starlinkID",
+			"value": "undefined",
+			"type": "default"
+		}
+	]
+}
