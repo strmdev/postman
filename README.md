@@ -8,8 +8,6 @@
 
 A hobbi projekt otletet az [Open Source SpaceX REST API](https://github.com/r-spacex/SpaceX-API) adta. Cel: elso korben alap tesztek irasa az emlitett open source projekthez.
 
-> I am not affiliated, associated, authorized, endorsed by, or in any way officially connected with Space Exploration Technologies Corp (SpaceX), or any of its subsidiaries or its affiliates. The names SpaceX as well as related names, marks, emblems and images are registered trademarks of their respective owners.
-
 ### 1.2 Task lista
 
 A tesztek alapjat kepezo dokumentaciok forrasa elerheto [ide kattintva](https://github.com/r-spacex/SpaceX-API/tree/master/docs).
